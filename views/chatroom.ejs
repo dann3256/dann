@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <a href="#" class="myButton">blue</a>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>チャット</h1>
+    <div id="message"></div>
+    <form action="/">
+        <button>ホームへ</button>
+    </form>
+
+    <div>
+    <input id="input" type="text" placeholder="メッセージを入力">
+    <button onclick="sendMgs()">送信</button>
+    </div>
+
+    <script>
+         // ソケットの作成(サーバーとクライアントを接続して’connection'を発火)
+        const socket=io();
+        // 名前を受け取っておく
+        const username='<%= name%>';
+
+        function sendMgs(){
+           const msg=document.getElementById('input').value;
+           if(msg.trim()==="") {
+           return;
+           }else{
+            //クライアントAが 'chatMessage'というイベント名で送信
+           socket.emit('chatMessage',msg,username);
+           // 入力欄をクリア
+           document.getElementById('input').value="";
+           }
+        
+       }
+       
+        // クライアントA,Bが'chatMessage'というイベントを受けると実行
+       socket.on('chatMessage',(data)=>{
+        
+           const AddMessage=document.getElementById('message');
+           const newMsg= document.createElement('li');
+           newMsg.textContent=`${data.name}:${data.message}`;
+           AddMessage.appendChild(newMsg);
+        
+       });
+
+    </script>
+
+    
+</body>
+</html>     

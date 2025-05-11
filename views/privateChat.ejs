@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1><%=user%>さんのチャットルーム</h1>
+
+    <%if(messages.length>0){ %>
+        <% messages.forEach(msg => { %>
+            <% if (msg.message) { %>
+                <p><%= msg.sender %>: <%= msg.message %></p>
+            <% } %>
+            <% if (msg.image_url) { %>
+                <p><%= msg.sender %>: <br><img src=<%= msg.image_url %> width="200"></p>
+            <% } %>
+        <% }); %>
+    <%}else{ %>
+        <p>履歴はありません</p>
+    <%} %>
+    <div id="chat-box"></div>
+    <div id="new-chat"> </div>
+
+   <div>
+    <input type="text" id="message" placeholder="メッセージを入力">
+    <button onclick="sendMessage()">送信</button>
+   </div>
+   <div>
+    <input type="file" id="imagefile" name="file">
+    <button onclick="sendImage()">画像送信</button>
+   </div>
+</body>
+<script>
+    const socket=io();
+    console.log('ソケット接続成成功');
+    const sender = "<%= user %>";
+    const receiver = "<%= receiver %>";
+    socket.emit('register', sender);
+
+    function sendMessage(){
+        const message = document.getElementById('message').value;
+        socket.emit('privateMessage', { sender, receiver, message });
+        // 自分が見れるように
+        document.getElementById('new-chat').innerHTML += `<p>${sender}:${message}</p>`;
+        document.getElementById('message').value = "";
+
+    };
+    socket.on('privateMessage', data => {
+        document.getElementById('chat-box').innerHTML += `<p>${data.sender}:${data.message}</p>`;
+    });
+
+
+    async function sendImage(){
+        const formData= new FormData();
+        const fileInput = document.getElementById('imagefile').files[0];
+
+        formData.append('file',fileInput);
+        const response=await fetch('/upload',{
+           method:'POST',
+           body:formData
+        });
+        if (!response.ok) {
+           console.log('ファイルアップロード失敗しました');
+           return;
+        }
+
+
+        const data=await response.json();
+        document.getElementById('new-chat').innerHTML += `<p>${sender}:<br><img src=${data.fileUrl} width="200"></p>`;
+        socket.emit('chatFile',{fileUrl:data.fileUrl,receiver,sender});
+    
+    };
+    socket.on('chatFile',data=>{
+        console.log("受け取ったファイル:", data); 
+        document.getElementById('chat-box').innerHTML += `<p>${data.sender}さんから画像：<br><img src=${data.fileUrl} width="200"></p>`;
+        });
+    
+    
+</script>
+</html>

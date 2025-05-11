@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <h1>ようこそ,<%= use.name%>さん</h1>
+        <a href="/logout">
+            <button>ログアウト</button>
+        </a>
+
+        <form action="/memos" method="POST">
+            <input type="text" name="content" placeholder="メモを追加">
+            <button>追加</button>
+        </form>
+
+        <% if(memos.length>0){ %>
+          <% memos.forEach(a => { %>
+             <li><%= a.memo %></li>
+          <% }); %>
+        <% }else{ %>
+             <li>メモはありません</li>
+        <% } %>
+
+        <form action="/chatroom">
+            <button>フリーチャットへ</button>
+        </form>
+
+        <form action="/select">
+        <button>個別チャットへ</button>
+        </form>
+        <a href="/">
+            <button>ホームへ</button>
+        </a>
+</body>
+</html>

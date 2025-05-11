@@ -1,0 +1,41 @@
+
+.myButton {
+	box-shadow: 3px 4px 0px 0px #50574e;
+	background:linear-gradient(to bottom, #e8edf0 5%, #484d47 100%);
+	background-color:#e8edf0;
+	border-radius:5px;
+	border:1px solid #5f6b60;
+	display:inline-block;
+	cursor:pointer;
+	color:#0f010f;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:12px 44px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #bfc4be;
+	
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #484d47 5%, #e8edf0 100%);
+	background-color:#484d47;
+    
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+
+/* ボタンのデフォルトスタイルをリセット */
+button {
+    all: unset; /* すべてのデフォルトスタイルをリセット */
+    display: inline-block; /* aタグと同じ動作 */
+}
+
+
+/* 背景 */
+body{
+    background-image: linear-gradient(90deg, rgba(239, 242, 245, 1) 0%, rgba(75, 68, 71, 1) 100%);
+}
